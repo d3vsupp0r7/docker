@@ -6,30 +6,37 @@
 - [Confluentic Kafka config](#confluentic-kafka-config)
   - [Init topics  on docker startup - to test](#init-topics--on-docker-startup---to-test)
     - [template](#template)
-    - [test working - no message autocreation](#test-working---no-message-autocreation)
-    - [INIT TOPIC ON STARTUP](#init-topic-on-startup)
+    - [INIT TOPIC ON STARTUP - no message autocreation](#init-topic-on-startup---no-message-autocreation)
   
 # Confluentic - Kafka - Docker Example
 
 ## Verison
 
+Inside the Kafka container execute these command. The result of this command must be used with Confluenti URL to know what version of kafka the docker image is using.
+
+```
 cd /bin
 kafka-broker-api-versions --version
+```
 
 ## URL
+
 https://docs.confluent.io/platform/current/release-notes/index.html
 
 # Kafka - UI
 
 ## Kafka standalone UI
 
-Kfka too must use port 29092
+Kafka standalone UI, based on docker-compose.ym configuration must use port 29092
 
 https://www.kafkatool.com/
 
 # Confluentic Kafka config
+
 ## Init topics  on docker startup - to test
+
 ### template
+```
  kafka-init-topics:
     image: confluentinc/cp-kafka:5.3.1
     volumes:
@@ -42,10 +49,11 @@ https://www.kafkatool.com/
                kafka-topics --create --topic second.messages --partitions 2 --replication-factor 1 --if-not-exists --zookeeper zookeeper1:2181 && \
                kafka-topics --create --topic first.messages --partitions 2 --replication-factor 1 --if-not-exists --zookeeper zookeeper0:2181 && \
                kafka-console-producer --broker-list kafka1:29092 -topic second.users < /data/message.json'"
+```
 
-### test working - no message autocreation
+### INIT TOPIC ON STARTUP - no message autocreation
 
- ### INIT TOPIC ON STARTUP
+ ```
   init-kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -63,3 +71,4 @@ https://www.kafkatool.com/
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka0:9092 --list
       "
+      ```
