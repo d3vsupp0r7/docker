@@ -1,0 +1,44 @@
+{
+	"info": {
+		"_postman_id": "c9057ec6-7c9e-4270-9fe2-dce4cb761dff",
+		"name": "Springboot2-ApacheKafka Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sendJSONMessage",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"holder\": \"Tonny\",\r\n\"funds\": \"2000\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/kafka",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"kafka"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

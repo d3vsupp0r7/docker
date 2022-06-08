@@ -1,0 +1,140 @@
+version: "3.7"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: sasl-plain-zookeeper
+    volumes:
+      - ./zookeeper-jaas.conf:/etc/zookeeper/zookeeper-jaas.conf
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "9091"
+      ZOOKEEPER_SERVER_ID: 1
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/zookeeper/zookeeper-jaas.conf"
+    ports:
+      - "9091:9091"
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-1
+    container_name: sasl-plain-kafka-1
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./kafka-jaas.conf:/etc/kafka/kafka-jaas.conf
+      - ./server.properties:/etc/kafka/server.properties
+      - ./zookeeper.properties:/etc/kafka/zookeeper.properties
+      - ./consumer.properties:/etc/kafka/consumer.properties
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: "SASL_PLAINTEXT://kafka-1:9191,EXTERNAL://host.docker.internal:9291"
+      KAFKA_AUTHORIZER_CLASS_NAME: "kafka.security.authorizer.AclAuthorizer"
+      KAFKA_BROKER_ID: 1
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "SASL_PLAINTEXT"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "SASL_PLAINTEXT:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT"
+      KAFKA_LISTENERS: "SASL_PLAINTEXT://0.0.0.0:9191,EXTERNAL://0.0.0.0:9291"
+      KAFKA_SASL_ENABLED_MECHANISMS: "PLAIN"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: "PLAIN"
+      KAFKA_SUPER_USERS: "User:kafka;User:kafkarest;User:schemaregistry"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:9091"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka-jaas.conf"
+      #
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+    ports:
+      - "9291:9291"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-2
+    container_name: sasl-plain-kafka-2
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./kafka-jaas.conf:/etc/kafka/kafka-jaas.conf
+      - ./server.properties:/etc/kafka/server.properties
+      - ./zookeeper.properties:/etc/kafka/zookeeper.properties
+      - ./consumer.properties:/etc/kafka/consumer.properties
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: "SASL_PLAINTEXT://kafka-2:9192,EXTERNAL://host.docker.internal:9292"
+      KAFKA_AUTHORIZER_CLASS_NAME: "kafka.security.authorizer.AclAuthorizer"
+      KAFKA_BROKER_ID: 2
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "SASL_PLAINTEXT"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "SASL_PLAINTEXT:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT"
+      KAFKA_LISTENERS: "SASL_PLAINTEXT://0.0.0.0:9192,EXTERNAL://0.0.0.0:9292"
+      KAFKA_SASL_ENABLED_MECHANISMS: "PLAIN"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: "PLAIN"
+      KAFKA_SUPER_USERS: "User:kafka;User:kafkarest;User:schemaregistry"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:9091"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka-jaas.conf"
+      #
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+    ports:
+      - "9292:9292"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-3
+    container_name: sasl-plain-kafka-3
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./kafka-jaas.conf:/etc/kafka/kafka-jaas.conf
+      - ./server.properties:/etc/kafka/server.properties
+      - ./zookeeper.properties:/etc/kafka/zookeeper.properties
+      - ./consumer.properties:/etc/kafka/consumer.properties
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: "SASL_PLAINTEXT://kafka-3:9193,EXTERNAL://host.docker.internal:9293"
+      KAFKA_AUTHORIZER_CLASS_NAME: "kafka.security.authorizer.AclAuthorizer"
+      KAFKA_BROKER_ID: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "SASL_PLAINTEXT"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "SASL_PLAINTEXT:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT"
+      KAFKA_LISTENERS: "SASL_PLAINTEXT://0.0.0.0:9193,EXTERNAL://0.0.0.0:9293"
+      KAFKA_SASL_ENABLED_MECHANISMS: "PLAIN"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: "PLAIN"
+      KAFKA_SUPER_USERS: "User:kafka;User:kafkarest;User:schemaregistry"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:9091"
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka-jaas.conf"
+      #
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+    ports:
+      - "9293:9293"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ## Kafka UI
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - zookeeper
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9191,kafka-2:9192,kafka-3:9193
+      KAFKA_CLUSTERS_0_ZOOKEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_JMXPORT: 9997
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: "PLAIN"
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka" password="kafka";
+      KAFKA_CLUSTERS_0_PROPERTIES_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_CLUSTERS_0_JMXSSL: "false"

@@ -1,0 +1,17 @@
+server:
+  port: 8081
+spring:
+  kafka:
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka" password="kafka"; 
+      security:
+        protocol: SASL_PLAINTEXT
+    producer:
+     bootstrap-servers: host.docker.internal:9291
+    consumer:
+      group-id: group-1
+      auto-offset-reset: earliest
+      bootstrap-servers: host.docker.internal:9291
